@@ -1,6 +1,6 @@
 
 %*-------------------------------------------------------------------------------*;
-%* ±í3 ¸Ğ¾õ×Ü·Ö½Ï»ùÏß±ä»¯ÖµMMRMµÄLSMEANS×é¼ä²îÖµÀúÊ±ĞÔ±È½Ï(FAS);
+%* Supplementary Table 4. Changes from baseline in ISNCSCI total sensory scores;
 %*-------------------------------------------------------------------------------*;
  proc format;
  	value vis
@@ -15,7 +15,7 @@ run;
  
  data adam;
 	set adam.adqs;
-	where paramn<=10 and anl01fl='ÊÇ' and 0<avisitn<400;
+	where paramn<=10 and anl01fl='æ˜¯' and 0<avisitn<400;
 	if trt01pn=99 then trt01pn=0;
 	if avisitn=0 then do; chg=0; pchg=0; end;
 	ord=1;
@@ -82,18 +82,18 @@ run;
 %q(con=%str(paramn=3 and ord=2),num=3);
 
 %*-------------------------------------------------------------------------------*;
-%* ±í8 ÔË¶¯×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯ÖµMMRMµÄLSMEANS×é¼ä²îÖµÀúÊ±ĞÔ±È½Ï£¨FAS£©;
+%* Supplementary Table 5. Changes from baseline in ISNCSCI total motor scores;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=8 and ord=2),num=8);
 
 
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.1.2 ¸Ğ¾õ×Ü·Ö-×óÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 3B. Changes from baseline in ISNCSCI sensory scoresâ€”â€”total sensory score-left side ;
 %*-------------------------------------------------------------------------------*;
  proc format;
  	value vis
-	0='»ùÏß'
+	0='åŸºçº¿'
 	201='D2'
 	202='D3'
 	203='D4'
@@ -107,7 +107,7 @@ quit;
  
  data adam;
 	set adam.adqs;
-	where paramn<=10 and anl01fl='ÊÇ';
+	where paramn<=10 and anl01fl='æ˜¯';
 	if avisitn=0 then do; chg=0; pchg=0; end;
 	if chg^=. or avisitn=0 then do;
 	ord=2;
@@ -171,47 +171,47 @@ run;
 %q(con=%str(paramn=1 and ord=2),num=1_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.2.2 ¸Ğ¾õ×Ü·Ö-ÓÒÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 3C. Changes from baseline in ISNCSCI sensory scoresâ€”â€”total sensory score-right side;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=2 and ord=2),num=2_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.3.2 ¸Ğ¾õ×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 3A. Changes from baseline in ISNCSCI sensory scoresâ€”â€”total sensory score;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=3 and ord=2),num=3_2);
 
 %*-------------------------------------------------------------------------------*;
-%* 14.2.1.4.2 Õë´Ì¾õ×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 3D. Changes from baseline in ISNCSCI sensory scoresâ€”â€”pinprick sensory score;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=4 and ord=2),num=4_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.5.2 Çá´¥¾õ×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 3E. Changes from baseline in ISNCSCI sensory scoresâ€”â€”light touch sensory score;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=5 and ord=2),num=5_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.6.2 ÔË¶¯×Ü·Ö-×óÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 4B. Changes from baseline in ISNCSCI motor scoresâ€”â€”total motor score-left side;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=6 and ord=2),num=6_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.7.2 ÔË¶¯×Ü·Ö-ÓÒÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£© ;
+%* Figure 4C. Changes from baseline in ISNCSCI motor scoresâ€”â€”total motor score-right side;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=7 and ord=2),num=7_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.8.2 ÔË¶¯×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£© ;
+%* Figure 4A. Changes from baseline in ISNCSCI motor scoresâ€”â€”total motor score;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=8 and ord=2),num=8_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.9.2 ÉÏÖ«ÔË¶¯ÆÀ·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£©;
+%* Figure 4D. Changes from baseline in ISNCSCI motor scoresâ€”â€”upper limb motor score;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=9 and ord=2),num=9_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.10.2  ÏÂÖ«ÔË¶¯ÆÀ·Ö½Ï»ùÏß±ä»¯Öµmean+CI-Ê±¼äÍ¼£¨FAS£© ;
+%* Figure 4E. Changes from baseline in ISNCSCI motor scoresâ€”â€”lower limb motor score ;
 %*-------------------------------------------------------------------------------*;
 %q(con=%str(paramn=10 and ord=2),num=10_2);
 
@@ -221,11 +221,11 @@ run;
 
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.1.2.1 ¸Ğ¾õ×Ü·Ö-×óÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%*Figure 5B. Changes from baseline in ISNCSCI sensory scores of pooled target dose groups vs placeboâ€”â€”total sensory score-left side;
 %*-------------------------------------------------------------------------------*;
  proc format;
  	value vis
-	0='»ùÏß'
+	0='åŸºçº¿'
 	201='D2'
 	202='D3'
 	203='D4'
@@ -243,7 +243,7 @@ quit;
  %macro q(num=,model=,paramn=);
  data adam;
 	set adam.adqs;
-	where paramn=&paramn and anl01fl='ÊÇ'  and avisitn<=303 and fasfl='ÊÇ';
+	where paramn=&paramn and anl01fl='æ˜¯'  and avisitn<=303 and fasfl='æ˜¯';
 	if trt01pn=99 then trt01pn=5;
 	else if trt01pn=4 or trt01pn=5 then trt01pn=trt01pn-1;
 	else trt01pn=trt01pn;
@@ -303,63 +303,63 @@ run;
 
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.2.2.1 ¸Ğ¾õ×Ü·Ö-ÓÒÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%* Figure 5C. Changes from baseline in ISNCSCI sensory scores of pooled target dose groups vs placeboâ€”â€”total sensory score-right side;
 %*-------------------------------------------------------------------------------*;
 %q(model=toeph,paramn=2,num=2_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.3.2.1 ¸Ğ¾õ×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%* Figure 5A. Changes from baseline in ISNCSCI sensory scores of pooled target dose groups vs placeboâ€”â€”total sensory score	;
 %*-------------------------------------------------------------------------------*;
 %q(model=toeph,paramn=3,num=3_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.4.2.1 Õë´Ì¾õ×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%* Figure 5D. Changes from baseline in ISNCSCI sensory scores of pooled target dose groups vs placeboâ€”â€”Pinprick sensory score ;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=4,num=4_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.5.2.1 Çá´¥¾õ×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%* Figure 5E. Changes from baseline in ISNCSCI sensory scores of pooled target dose groups vs placeboâ€”â€”light touch sensory score ;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=5,num=5_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.6.2.1 ÔË¶¯×Ü·Ö-×óÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	 	;
+%* Figure 6B. Changes from baseline in ISNCSCI motor scores of pooled target dose groups vs placeboâ€”â€”Total motor score-left side ;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=6,num=6_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.7.2.1 ÔË¶¯×Ü·Ö-ÓÒÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%* Figure 6C. Changes from baseline in ISNCSCI motor scores of pooled target dose groups vs placeboâ€”â€”Total motor score-right side 	;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=7,num=7_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.8.2.1 ÔË¶¯×Ü·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£©  	;
+%* Figure 6A. Changes from baseline in ISNCSCI motor scores of pooled target dose groups vs placeboâ€”â€”Total motor score  	;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=8,num=8_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.9.2.1 ÉÏÖ«ÔË¶¯ÆÀ·ÖÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£©  	;
+%* Figure 6D. Changes from baseline in ISNCSCI motor scores of pooled target dose groups vs placeboâ€”â€”upper limb motor score  	;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=9,num=9_2);
 
 %*-------------------------------------------------------------------------------*;
-%* Í¼14.2.1.10.2.1 ÏÂÖ«ÔË¶¯ÆÀ·Ö½Ï»ùÏß±ä»¯Öµlsmean+CI-Ê±¼äÍ¼-1200ºÍ2400ºÏ²¢£¨FAS£© 	;
+%* Figure 6E. Changes from baseline in ISNCSCI motor scores of pooled target dose groups vs placeboâ€”â€”lower limb motor score 	;
 %*-------------------------------------------------------------------------------*;
 %q(model=un,paramn=10,num=10_2);
 
 
 
 %*-------------------------------------------------------------------------------*;
-%* VASÆÀ·ÖÍ¼;
+%*Supplementary Figure 1. Change from baseline in VAS scores in 1200 mg, 2400 mg and Placebo groupsï¼›
 %*-------------------------------------------------------------------------------*;
  
 proc format;
 	invalue $namec
-	'nt'='ÀıÊı£¨È±Ê§£©'
-	'mean_std'='Æ½¾ùÖµ£¨±ê×¼²î£©' 
- 	'med'='ÖĞÎ»Êı' 
-	'q1_q3'='ËÄ·ÖÎ»Êı£¨Q1£¬Q3£©' 
-	'min_max'='×îĞ¡Öµ£¬×î´óÖµ';
+	'nt'='ä¾‹æ•°ï¼ˆç¼ºå¤±ï¼‰'
+	'mean_std'='å¹³å‡å€¼ï¼ˆæ ‡å‡†å·®ï¼‰' 
+ 	'med'='ä¸­ä½æ•°' 
+	'q1_q3'='å››åˆ†ä½æ•°ï¼ˆQ1ï¼ŒQ3ï¼‰' 
+	'min_max'='æœ€å°å€¼ï¼Œæœ€å¤§å€¼';
  
 	invalue namen
 	'nt'=1
@@ -369,12 +369,12 @@ proc format;
 	'min_max'=5;
 
 	invalue atrtn
-	'3mg/kg»ò200mg'=1
+	'3mg/kgæˆ–200mg'=1
 	'600mg'=2
 	'1200mg'=3
 	'2400mg'=4
 	'4800mg'=5
-	'°²Î¿¼Á'=6
+	'å®‰æ…°å‰‚'=6
 ;
 quit; 
 
@@ -382,13 +382,13 @@ quit;
 **-- 1 adam data ***;
 data adsl0;
 	set adam.adsl;
-	where fasfl='ÊÇ';
+	where fasfl='æ˜¯';
 	length atrt $200;
 	atrt=trt01p;
 	atrtn=input(atrt,atrtn.);
 	output;
 	atrtn=7;
-	atrt='»ã×Ü';
+	atrt='æ±‡æ€»';
 	output;
 run;
 
@@ -396,7 +396,7 @@ proc sql noprint;
 	create table subn as
 	select count(distinct usubjid) as totn,atrtn,atrt from adsl0 group by atrtn,atrt;
 
-	select count(distinct usubjid) into: plbyn from adsl0 where find(trt01p,'°²Î¿¼Á')>0;
+	select count(distinct usubjid) into: plbyn from adsl0 where find(trt01p,'å®‰æ…°å‰‚')>0;
 quit;
 
 data _null_;
@@ -407,13 +407,13 @@ data _null_;
 run;
 
 %if &plbyn.=0 %then %do;
-	%let cola6=°²Î¿¼Á×é;
+	%let cola6=å®‰æ…°å‰‚ç»„;
 	%let totn6=0;
 %end;
 
 data raw0;
 	set adam.adqs;
-	where fasfl='ÊÇ' and parcat1='ÊÓ¾õÄ£ÄâÆÀ·Ö'  and anl01fl='ÊÇ';
+	where fasfl='æ˜¯' and parcat1='è§†è§‰æ¨¡æ‹Ÿè¯„åˆ†'  and anl01fl='æ˜¯';
 	if index(strip(put(aval,best.)),'.')>0 then dec1=find(reverse(strip(put(aval,best.))),'.')-1;
 	else dec1=0;
 	if index(strip(put(chg,best.)),'.')>0 then dec2=find(reverse(strip(put(chg,best.))),'.')-1;
@@ -425,7 +425,7 @@ data raw0;
 	atrtn=input(atrt,atrtn.);
 	output;
 	atrtn=7;
-	atrt='»ã×Ü';
+	atrt='æ±‡æ€»';
 	output;
 run;
 
@@ -439,7 +439,7 @@ proc tabulate data=&indtc.;
 run;
 ods trace off;
 
-**µÃµ½×î´óĞ¡ÊıÎ»£¬ºÏ²¢Í³¼ÆÁ¿ **;
+**å¾—åˆ°æœ€å¤§å°æ•°ä½ï¼Œåˆå¹¶ç»Ÿè®¡é‡ **;
 %macro dec_stat(pre=,ord=);
 proc sort data=raw0 out=avisit(keep=paramn avisitn avisit) nodupkey;
 	by paramn avisitn ;
@@ -490,7 +490,7 @@ run;
 %dec_stat(pre=chg,ord=2);
 %dec_stat(pre=pchg,ord=3);
 
-** ºÏ²¢Èı²¿·Ö ÕûÀí³ÉÊä³ö¸ñÊ½ **;
+** åˆå¹¶ä¸‰éƒ¨åˆ† æ•´ç†æˆè¾“å‡ºæ ¼å¼ **;
 
 data &out.;
 	set stat1t stat2t(where=(avisitn>0.5)) stat3t(where=(avisitn>0.5));
@@ -512,8 +512,8 @@ data tot02(keep=txt1n ord ord1 ord2 txt1 txt2 col1-col7 param paramn);
 	by paramn avisitn;
 	if first.avisitn then txt1n+1;
 	if ord1=1 then txt1="  "||strip(avisit);
-	else if ord1=2 then txt1="  "||cats(avisit,'½Ï»ùÏß±ä»¯Öµ');
-	else if ord1=3 then txt1="  "||cats(avisit,'½Ï»ùÏß±ä»¯°Ù·Ö±È');
+	else if ord1=2 then txt1="  "||cats(avisit,'è¾ƒåŸºçº¿å˜åŒ–å€¼');
+	else if ord1=3 then txt1="  "||cats(avisit,'è¾ƒåŸºçº¿å˜åŒ–ç™¾åˆ†æ¯”');
 	txt2=strip(input(lowcase(name),$namec.));
 	ord2=input(lowcase(name),namen.);
 	ord=1;
