@@ -1,44 +1,44 @@
  
 %*-------------------------------------------------------------------------------*;
-%* ±í14.3.1.1 ÖÎÁÆÆÚ¼äTEAE×Ü½á(SS);
+%* Supplementary Table 1- Summary of All TEAEs;
 %*-------------------------------------------------------------------------------*;
 
 proc format;
   value name
-  1='ÖÁÉÙ·¢ÉúÒ»´ÎTEAE'
-	2='  3¼¶¼°ÒÔÉÏµÄTEAE'
-	3='  ÑÏÖØ²»Á¼ÊÂ¼ş'
-	4='  µ¼ÖÂËÀÍöµÄTEAE'
-	5='  µ¼ÖÂÓÀ¾ÃÍ£Ò©µÄTEAE'
-	6='  µ¼ÖÂÔİÍ£ÓÃÒ©µÄTEAE'
-	7='  µ¼ÖÂÍË³öÊÔÑéµÄTEAE'
+  1='è‡³å°‘å‘ç”Ÿä¸€æ¬¡TEAE'
+	2='  3çº§åŠä»¥ä¸Šçš„TEAE'
+	3='  ä¸¥é‡ä¸è‰¯äº‹ä»¶'
+	4='  å¯¼è‡´æ­»äº¡çš„TEAE'
+	5='  å¯¼è‡´æ°¸ä¹…åœè¯çš„TEAE'
+	6='  å¯¼è‡´æš‚åœç”¨è¯çš„TEAE'
+	7='  å¯¼è‡´é€€å‡ºè¯•éªŒçš„TEAE'
 
-  8='ÓëÑĞ¾¿Ò©ÎïÏà¹ØµÄTEAE'
-	9='  3¼¶¼°ÒÔÉÏµÄTEAE'
-	10='  ÑÏÖØ²»Á¼ÊÂ¼ş'
-	11='  µ¼ÖÂËÀÍöµÄTEAE'
-	12='  µ¼ÖÂÓÀ¾ÃÍ£Ò©µÄTEAE'
-	13='  µ¼ÖÂÔİÍ£ÓÃÒ©µÄTEAE'
-	14='  µ¼ÖÂÍË³öÊÔÑéµÄTEAE'
+  8='ä¸ç ”ç©¶è¯ç‰©ç›¸å…³çš„TEAE'
+	9='  3çº§åŠä»¥ä¸Šçš„TEAE'
+	10='  ä¸¥é‡ä¸è‰¯äº‹ä»¶'
+	11='  å¯¼è‡´æ­»äº¡çš„TEAE'
+	12='  å¯¼è‡´æ°¸ä¹…åœè¯çš„TEAE'
+	13='  å¯¼è‡´æš‚åœç”¨è¯çš„TEAE'
+	14='  å¯¼è‡´é€€å‡ºè¯•éªŒçš„TEAE'
  ;
 run;
  
 proc sql noprint;
-	select count(distinct usubjid) into : n1 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=1;
-    select count(distinct usubjid) into : n2 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=2;
-	select count(distinct usubjid) into : n3 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=3;
-    select count(distinct usubjid) into : n4 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=4;
-	select count(distinct usubjid) into : n5 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=5;
+	select count(distinct usubjid) into : n1 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=1;
+    select count(distinct usubjid) into : n2 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=2;
+	select count(distinct usubjid) into : n3 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=3;
+    select count(distinct usubjid) into : n4 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=4;
+	select count(distinct usubjid) into : n5 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=5;
 
-    select count(distinct usubjid) into : n6 trimmed from adam.adsl where saffl='ÊÇ' and trt01an in (1,2,3,4,5);
-	select count(distinct usubjid) into : n7 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=99;
-	select count(distinct usubjid) into : n8 trimmed from adam.adsl where saffl='ÊÇ' and trt01an^=.;
+    select count(distinct usubjid) into : n6 trimmed from adam.adsl where saffl='æ˜¯' and trt01an in (1,2,3,4,5);
+	select count(distinct usubjid) into : n7 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=99;
+	select count(distinct usubjid) into : n8 trimmed from adam.adsl where saffl='æ˜¯' and trt01an^=.;
 
 quit;
 
 data teae;
   set adam.adae;
-  where saffl="ÊÇ" and trtemfl="ÊÇ";
+  where saffl="æ˜¯" and trtemfl="æ˜¯";
 	output;
 	if trt01an in (1,2,3,4,5) then do; trt01an=6;output;end;
 	if trt01an^=. then do; trt01an=999;output;end;
@@ -46,7 +46,7 @@ data teae;
 run;
 data relteae;
   set teae;
-  where relgr1="ÓĞ¹Ø";
+  where relgr1="æœ‰å…³";
 run;
 
 data dummy;
@@ -66,19 +66,19 @@ quit;
 %summary(ord=1,in=teae,cond=%str(1=1));
 %summary(ord=2,in=teae,cond=%str(atoxgrn>=3));
 
-%summary(ord=3,in=teae,cond=%str(aeser="ÊÇ"));
-%summary(ord=4,in=teae,cond=%str(aeout="ÖÂËÀ" or aesdth='ÊÇ'));
-%summary(ord=5,in=teae,cond=%str(aeacn='ÓÀ¾ÃÍ£Ò©'));
-%summary(ord=6,in=teae,cond=%str(aeacn='ÔİÍ£ÓÃÒ©'));
-%summary(ord=7,in=teae,cond=%str(aedis='ÊÇ'));
+%summary(ord=3,in=teae,cond=%str(aeser="æ˜¯"));
+%summary(ord=4,in=teae,cond=%str(aeout="è‡´æ­»" or aesdth='æ˜¯'));
+%summary(ord=5,in=teae,cond=%str(aeacn='æ°¸ä¹…åœè¯'));
+%summary(ord=6,in=teae,cond=%str(aeacn='æš‚åœç”¨è¯'));
+%summary(ord=7,in=teae,cond=%str(aedis='æ˜¯'));
 
 %summary(ord=8,in=relteae,cond=%str(1=1));
 %summary(ord=9,in=relteae,cond=%str(atoxgrn>=3));
-%summary(ord=10,in=relteae,cond=%str(aeser="ÊÇ"));
-%summary(ord=11,in=relteae,cond=%str(aeout="ÖÂËÀ" or aesdth='ÊÇ'));
-%summary(ord=12,in=relteae,cond=%str(aeacn='ÓÀ¾ÃÍ£Ò©'));
-%summary(ord=13,in=relteae,cond=%str(aeacn='ÔİÍ£ÓÃÒ©'));
-%summary(ord=14,in=relteae,cond=%str(aedis='ÊÇ'));
+%summary(ord=10,in=relteae,cond=%str(aeser="æ˜¯"));
+%summary(ord=11,in=relteae,cond=%str(aeout="è‡´æ­»" or aesdth='æ˜¯'));
+%summary(ord=12,in=relteae,cond=%str(aeacn='æ°¸ä¹…åœè¯'));
+%summary(ord=13,in=relteae,cond=%str(aeacn='æš‚åœç”¨è¯'));
+%summary(ord=14,in=relteae,cond=%str(aedis='æ˜¯'));
 
 data all1;
 	set f1-f14;
@@ -129,13 +129,13 @@ run;
 
  
 %*-------------------------------------------------------------------------------*;
-%* ±í14.3.1.2 °´ÕÕMedDRAÏµÍ³Æ÷¹Ù·ÖÀà¡¢Ê×Ñ¡ÊõÓï×Ü½áµÄTEAE(SS);
+%* Supplementary Table 1: All TEAEs across All Groups;
 %*-------------------------------------------------------------------------------*;
  
-%macro d_soc_pt(lib=,dtin=,filter=,group=,rate=,totlabel=/*ÄÚÈİÇëÓëtitle±£³ÖÒ»ÖÂ*/,
+%macro d_soc_pt(lib=,dtin=,filter=,group=,rate=,totlabel=/*å†…å®¹è¯·ä¸titleä¿æŒä¸€è‡´*/,
 								bign=,coln=,rown=,code1=aesoc,code2=aedecod,trtgrp=,congrp=,txtlabel=,collabel=,flag=Y, contfl=Y);
 
-%let nodata=ÎŞÏà¹ØÊı¾İ;  
+%let nodata=æ— ç›¸å…³æ•°æ®;  
 %let mgroup_=%qscan(&group,1,|);
 
 	proc sql noprint;
@@ -145,7 +145,7 @@ run;
 	    %put &type.;
 	quit;  
 
-***¸ù¾İ&groupºÍ&colĞÅÏ¢£¬°´ÕÕË³ĞòÉèÖÃÊıÖµĞÍ×é±ğ; 
+***æ ¹æ®&groupå’Œ&colä¿¡æ¯ï¼ŒæŒ‰ç…§é¡ºåºè®¾ç½®æ•°å€¼å‹ç»„åˆ«; 
 data t0;
   set &lib..&dtin.;
   if &filter.;
@@ -175,8 +175,8 @@ data t0;
 ***uncoded***;
 data t1;
 	  set t0;
-	  if missing(&code1.) then &code1.="Î´±àÂë"; 
-	  if missing(&code2.) then &code2.="Î´±àÂë"; 
+	  if missing(&code1.) then &code1.="æœªç¼–ç "; 
+	  if missing(&code2.) then &code2.="æœªç¼–ç "; 
 run;
 
 proc sql noprint;
@@ -185,7 +185,7 @@ quit;
 
 %put &bigns; 
 
-%if %length(&rate) %then %do;***Èç¹û·¢ÉúÂÊÌîĞ´Êı×Ö,»ñÈ¡ÈÎºÎÒ»×é·¢ÉúÂÊ·ûºÏÌõ¼şµÄPT;
+%if %length(&rate) %then %do;***å¦‚æœå‘ç”Ÿç‡å¡«å†™æ•°å­—,è·å–ä»»ä½•ä¸€ç»„å‘ç”Ÿç‡ç¬¦åˆæ¡ä»¶çš„PT;
 proc sql;
 	create table pt_rate as 
     select distinct count(distinct usubjid) as num,2 as seq,grp,&code2 as txt1 length=200,&code2,&code1 from t1 group by grp,&code1.,&code2.
@@ -237,7 +237,7 @@ proc sql noprint;
 	order by seq, txt1, &code1, &code2, grp;
 quit; 
 
-***·Ö×é×ªÖÃ;
+***åˆ†ç»„è½¬ç½®;
 proc transpose data=t2sum out=t2sum_1 prefix=_col;
 	by seq txt1 &code1 &code2;
 	var num;
@@ -262,13 +262,13 @@ run;
     %end;
   run;
 
-***soc/ptnum for seq Èç¹û°´ÕÕÄ³ÌØÊâ×é±ğÅÅĞòÔòÔÚt1ºóÃæ¼ÓÉ¸Ñ¡Ìõ¼ş£¬·ñÔòÖÃ¿Õtrtgrp,congrp***;
-/*  ²»Á¼ÊÂ¼şµÄÍ³¼Æ±í¸ñ½«ÒÔ²»Á¼ÊÂ¼şÔÚÊÔÑé×éµÄ·¢ÉúÂÊ´Ó¸ßµ½µÍÅÅĞò£¬ÓÅÏÈ¿¼ÂÇSOCµÄ·¢ÉúÂÊ£¬ÔÚSOCÏÂ¼ÌĞø°´PT·¢ÉúÂÊ´Ó¸ßÍùµÍÅÅĞò¡£*/
-/*	ÈôÊÔÑé×éµÄ·¢ÉúÂÊÏàÍ¬£¬ÔòÒÀÏàÍ¬Ô­Ôò°´¶ÔÕÕ×éµÄ·¢ÉúÂÊ´Ó¸ßÍùµÍÅÅĞò¡£Èô·¢ÉúÂÊÈÔÈ»ÏàÍ¬£¬Ôò°´ºº×ÖÆ´ÒôË³Ğò½øĞĞÅÅĞò¡£*/
+***soc/ptnum for seq å¦‚æœæŒ‰ç…§æŸç‰¹æ®Šç»„åˆ«æ’åºåˆ™åœ¨t1åé¢åŠ ç­›é€‰æ¡ä»¶ï¼Œå¦åˆ™ç½®ç©ºtrtgrp,congrp***;
+/*  ä¸è‰¯äº‹ä»¶çš„ç»Ÿè®¡è¡¨æ ¼å°†ä»¥ä¸è‰¯äº‹ä»¶åœ¨è¯•éªŒç»„çš„å‘ç”Ÿç‡ä»é«˜åˆ°ä½æ’åºï¼Œä¼˜å…ˆè€ƒè™‘SOCçš„å‘ç”Ÿç‡ï¼Œåœ¨SOCä¸‹ç»§ç»­æŒ‰PTå‘ç”Ÿç‡ä»é«˜å¾€ä½æ’åºã€‚*/
+/*	è‹¥è¯•éªŒç»„çš„å‘ç”Ÿç‡ç›¸åŒï¼Œåˆ™ä¾ç›¸åŒåŸåˆ™æŒ‰å¯¹ç…§ç»„çš„å‘ç”Ÿç‡ä»é«˜å¾€ä½æ’åºã€‚è‹¥å‘ç”Ÿç‡ä»ç„¶ç›¸åŒï¼Œåˆ™æŒ‰æ±‰å­—æ‹¼éŸ³é¡ºåºè¿›è¡Œæ’åºã€‚*/
 
   proc sql;
     create table freq3 as
-    select freq2.*,temp1.socsum/**ÊÔÑé×ésocnum***/,temp1_1.socsum1/**¶ÔÕÕ×ésocnum***/,temp2.ptsum/**ÊÔÑé×éptnum***/,temp3.ptsum1/**¶ÔÕÕ×éptnum***/ from freq2
+    select freq2.*,temp1.socsum/**è¯•éªŒç»„socnum***/,temp1_1.socsum1/**å¯¹ç…§ç»„socnum***/,temp2.ptsum/**è¯•éªŒç»„ptnum***/,temp3.ptsum1/**å¯¹ç…§ç»„ptnum***/ from freq2
     left join (select distinct &code1.,count(distinct usubjid) as socsum from t1 %if &trtgrp^=%str() %then (where=(&trtgrp.)); group by &code1.) temp1 
     on temp1.&code1.=freq2.&code1.
     left join (select distinct &code1.,count(distinct usubjid) as socsum1 from t1 %if &trtgrp^=%str() %then (where=(&congrp.)); group by &code1.) temp1_1 
@@ -303,7 +303,7 @@ run;
 
   
 ********************************************************************************************
-»ñÈ¡socµ½ÏÂÒ»Ò³Ê×ĞĞ, Èôsoc/ptÃ»ÓĞ¿çÒ³Ôò²»Êä³ö£¬¿çÒ³²»±£Áô ÀıÊı£¨°Ù·Ö±È£©£¬Ö»±£Áôsoc£¨Ğø£©
+è·å–socåˆ°ä¸‹ä¸€é¡µé¦–è¡Œ, è‹¥soc/ptæ²¡æœ‰è·¨é¡µåˆ™ä¸è¾“å‡ºï¼Œè·¨é¡µä¸ä¿ç•™ ä¾‹æ•°ï¼ˆç™¾åˆ†æ¯”ï¼‰ï¼Œåªä¿ç•™socï¼ˆç»­ï¼‰
 ********************************************************************************************;
 proc sql noprint;
 	create table soc1 as 
@@ -313,7 +313,7 @@ quit;
 data soc2;
 	set soc1;
 	_soc1=strip(&code1.)||cats(pg);
-	if seq=2 and pg^=min_pg_soc then _soc2=strip(&code1.)||"£¨Ğø£©";
+	if seq=2 and pg^=min_pg_soc then _soc2=strip(&code1.)||"ï¼ˆç»­ï¼‰";
 run;
 
 proc sort data=soc2 out=final2 sortseq=linguistic(locale=zh_CN collation=PINYIN); 
@@ -337,20 +337,20 @@ run;
 %mend;
 
  proc sql noprint;
-	select count(distinct usubjid) into : saf1 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=1;
-    select count(distinct usubjid) into : saf2 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=2;
-	select count(distinct usubjid) into : saf3 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=3;
-    select count(distinct usubjid) into : saf4 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=4;
-	select count(distinct usubjid) into : saf5 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=5;
-    select count(distinct usubjid) into : saf6 trimmed from adam.adsl where saffl='ÊÇ' and trt01an in (1,2,3,4,5);
-	select count(distinct usubjid) into : saf7 trimmed from adam.adsl where saffl='ÊÇ' and trt01an=99;
-	select count(distinct usubjid) into : saf8 trimmed from adam.adsl where saffl='ÊÇ' and trt01an^=.;
+	select count(distinct usubjid) into : saf1 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=1;
+    select count(distinct usubjid) into : saf2 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=2;
+	select count(distinct usubjid) into : saf3 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=3;
+    select count(distinct usubjid) into : saf4 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=4;
+	select count(distinct usubjid) into : saf5 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=5;
+    select count(distinct usubjid) into : saf6 trimmed from adam.adsl where saffl='æ˜¯' and trt01an in (1,2,3,4,5);
+	select count(distinct usubjid) into : saf7 trimmed from adam.adsl where saffl='æ˜¯' and trt01an=99;
+	select count(distinct usubjid) into : saf8 trimmed from adam.adsl where saffl='æ˜¯' and trt01an^=.;
 
 quit;
 
 data teae;
   set adam.adae;
-  where saffl="ÊÇ" and trtemfl="ÊÇ";
+  where saffl="æ˜¯" and trtemfl="æ˜¯";
 	output;
 	if trt01an in (1,2,3,4,5) then do; trt01an=6;output;end;
 	if trt01an^=. then do; trt01an=999;output;end;
@@ -360,14 +360,14 @@ proc sort data=teae;
 	by trt01an usubjid;
 run;
  
- %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="ÊÇ" and TRTEMFL = 'ÊÇ' ),group=trt01an|1\2\3\4\5\6\99\999,totlabel=ÖÁÉÙ·¢Éú¹ıÒ»´ÎTEAE,bign=saf,
+ %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="æ˜¯" and TRTEMFL = 'æ˜¯' ),group=trt01an|1\2\3\4\5\6\99\999,totlabel=è‡³å°‘å‘ç”Ÿè¿‡ä¸€æ¬¡TEAE,bign=saf,
     coln=8,rown=10,code1=AEBODSYS,code2=AEDECOD);
 
  
  
 %*-------------------------------------------------------------------------------*;
-%* ±í14.3.1.3 °´ÕÕMedDRAÏµÍ³Æ÷¹Ù·ÖÀà¡¢Ê×Ñ¡ÊõÓï×Ü½áµÄÓëÑĞ¾¿Ò©ÎïÏà¹ØµÄTEAE(SS);
+%* è¡¨14.3.1.3 æŒ‰ç…§MedDRAç³»ç»Ÿå™¨å®˜åˆ†ç±»ã€é¦–é€‰æœ¯è¯­æ€»ç»“çš„ä¸ç ”ç©¶è¯ç‰©ç›¸å…³çš„TEAE(SS);
 %*-------------------------------------------------------------------------------*;
  
- %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="ÊÇ" and TRTEMFL = 'ÊÇ' and relgr1='ÓĞ¹Ø'),group=trt01an|1\2\3\4\5\6\99\999,totlabel=ÖÁÉÙ·¢Éú¹ıÒ»´ÎTEAE,bign=saf,
+ %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="æ˜¯" and TRTEMFL = 'æ˜¯' and relgr1='æœ‰å…³'),group=trt01an|1\2\3\4\5\6\99\999,totlabel=è‡³å°‘å‘ç”Ÿè¿‡ä¸€æ¬¡TEAE,bign=saf,
     coln=8,rown=10,code1=AEBODSYS,code2=AEDECOD);
