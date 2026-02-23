@@ -1,12 +1,12 @@
 %*-------------------------------------------------------------------------------*;
-%* Õº14.4.1.1 ∆Ωæ˘ALMB-0166 (ng/ml) ÀÊ ±º‰±‰ªØ«˙œﬂ£®PKCS£©;
+%* Figure 2. Pharmacokinetics profiles of 0166;
 %*-------------------------------------------------------------------------------*;
  
 data adpc;
 	set adam.adpc;
-	*µ•Œª◊™ªØ£∫1000ng=1ug;
+	*Âçï‰ΩçËΩ¨ÂåñÔºö1000ng=1ug;
 	aval=aval/1000;
-	where PKCSFL=' «' and anl03fl=' «' and param='—™«ÂALMB-0166£®ng/mL£©' and trt01p^='∞≤Œøº¡' and ^missing(aval);
+	where PKCSFL='ÊòØ' and anl03fl='ÊòØ' and param='Ë°ÄÊ∏ÖALMB-0166Ôºàng/mLÔºâ' and trt01p^='ÂÆâÊÖ∞ÂâÇ' and ^missing(aval);
 run; 
 proc sort;
 	by param visitnum visit atptn atpt trt01pn trt01p usubjid;
@@ -39,7 +39,7 @@ quit;
 
 
 %*-------------------------------------------------------------------------------*;
-%* ±Ì14.4.1.2 ALMB-0166PK≤Œ ˝ª„◊‹±Ì£®PKPS£©;
+%* Table 2. Pharmacokinetic parameters of ALMB-0166;
 %*-------------------------------------------------------------------------------*;
 
 proc format;
@@ -87,7 +87,7 @@ quit;
  
 
 data adsl0;
-	set adam.adsl(where=(PKPSFL=' «'));
+	set adam.adsl(where=(PKPSFL='ÊòØ'));
 	length grp $200;
 	grp=trt01a;
 	grpn=trt01an;
@@ -101,7 +101,7 @@ proc sql noprint;
 quit;
 
 data _adpp00;
-	set adam.adpp(where=(PKPSFL=' «'));
+	set adam.adpp(where=(PKPSFL='ÊòØ'));
 	length grp $200;
 	grp=trt01a;
 	grpn=trt01an;
@@ -132,7 +132,7 @@ proc means data=adpp0(where=(^missing(aval))) noprint;
 	output out=_m1 n=n2 mean=mean2 std=sd2 median=median2 cv=cv2 min=min2 max=max2 q1=q12 q3=q32;
 run;
 
-**º∆À„CVb°¢GeoMean°¢GMStdErr**;
+**ËÆ°ÁÆóCVb„ÄÅGeoMean„ÄÅGMStdErr**;
 data cvb;
 	set adpp0(where=(aval>0));
 	ln=log(aval);
@@ -192,10 +192,10 @@ data total02;
 	length TXT1 TXT2 $200;
 	TXT1=grp2;
 	TXT2=input(lowcase(_NAME_),$txt.);
-	label TXT1="º¡¡ø◊È|£®mg£©" TXT2="Õ≥º∆¡ø" 
+	label TXT1="ÂâÇÈáèÁªÑ|ÔºàmgÔºâ" TXT2="ÁªüËÆ°Èáè" 
 		COL1="T@{sub max}|(h)" COL2="C@{sub max}|(ug/mL)" COL3="AUC@{sub 0-t}|(h*mg/mL)" 
-		COL4="AUC@{sub 0-°ﬁ}|(h*mg/mL)" COL5='%AUC@{sub ex}|(%)'
-		COL6="¶À@{sub z}|(10@{super -3}°¡1/h)" COL7="t@{sub 1/2}|(h)" COL8="V|(L)" COL9="CL|(mL/h)";
+		COL4="AUC@{sub 0-‚àû}|(h*mg/mL)" COL5='%AUC@{sub ex}|(%)'
+		COL6="Œª@{sub z}|(10@{super -3}√ó1/h)" COL7="t@{sub 1/2}|(h)" COL8="V|(L)" COL9="CL|(mL/h)";
 	TXT2n=input(compress(_name_,,'dk'),best.);
 	array col col1-col9;
 	do over col;
