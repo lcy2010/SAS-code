@@ -366,7 +366,7 @@ run;
  
  
 %*-------------------------------------------------------------------------------*;
-%* 表14.3.1.3 按照MedDRA系统器官分类、首选术语总结的与研究药物相关的TEAE(SS);
+%* Supplementary Table 2. All TRAEs across All Groups;
 %*-------------------------------------------------------------------------------*;
  
  %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="是" and TRTEMFL = '是' and relgr1='有关'),group=trt01an|1\2\3\4\5\6\99\999,totlabel=至少发生过一次TEAE,bign=saf,
