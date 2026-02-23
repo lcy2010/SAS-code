@@ -1,0 +1,373 @@
+ 
+%*-------------------------------------------------------------------------------*;
+%* 表14.3.1.1 治疗期间TEAE总结(SS);
+%*-------------------------------------------------------------------------------*;
+
+proc format;
+  value name
+  1='至少发生一次TEAE'
+	2='  3级及以上的TEAE'
+	3='  严重不良事件'
+	4='  导致死亡的TEAE'
+	5='  导致永久停药的TEAE'
+	6='  导致暂停用药的TEAE'
+	7='  导致退出试验的TEAE'
+
+  8='与研究药物相关的TEAE'
+	9='  3级及以上的TEAE'
+	10='  严重不良事件'
+	11='  导致死亡的TEAE'
+	12='  导致永久停药的TEAE'
+	13='  导致暂停用药的TEAE'
+	14='  导致退出试验的TEAE'
+ ;
+run;
+ 
+proc sql noprint;
+	select count(distinct usubjid) into : n1 trimmed from adam.adsl where saffl='是' and trt01an=1;
+    select count(distinct usubjid) into : n2 trimmed from adam.adsl where saffl='是' and trt01an=2;
+	select count(distinct usubjid) into : n3 trimmed from adam.adsl where saffl='是' and trt01an=3;
+    select count(distinct usubjid) into : n4 trimmed from adam.adsl where saffl='是' and trt01an=4;
+	select count(distinct usubjid) into : n5 trimmed from adam.adsl where saffl='是' and trt01an=5;
+
+    select count(distinct usubjid) into : n6 trimmed from adam.adsl where saffl='是' and trt01an in (1,2,3,4,5);
+	select count(distinct usubjid) into : n7 trimmed from adam.adsl where saffl='是' and trt01an=99;
+	select count(distinct usubjid) into : n8 trimmed from adam.adsl where saffl='是' and trt01an^=.;
+
+quit;
+
+data teae;
+  set adam.adae;
+  where saffl="是" and trtemfl="是";
+	output;
+	if trt01an in (1,2,3,4,5) then do; trt01an=6;output;end;
+	if trt01an^=. then do; trt01an=999;output;end;
+
+run;
+data relteae;
+  set teae;
+  where relgr1="有关";
+run;
+
+data dummy;
+	length txt1 $200;
+	do trt01an=1 ,2,3,4,5,6,99,999;
+	do grp=1 to 14;
+	  txt1=put(grp,name.);output;
+	end;
+	end;
+run;
+
+%macro summary(ord=,in=,cond=);
+proc sql noprint;
+  create table f&ord. as select &ord. as grp,trt01an,count(distinct usubjid) as count from &in. where &cond. group by trt01an;
+quit;
+%mend summary;
+%summary(ord=1,in=teae,cond=%str(1=1));
+%summary(ord=2,in=teae,cond=%str(atoxgrn>=3));
+
+%summary(ord=3,in=teae,cond=%str(aeser="是"));
+%summary(ord=4,in=teae,cond=%str(aeout="致死" or aesdth='是'));
+%summary(ord=5,in=teae,cond=%str(aeacn='永久停药'));
+%summary(ord=6,in=teae,cond=%str(aeacn='暂停用药'));
+%summary(ord=7,in=teae,cond=%str(aedis='是'));
+
+%summary(ord=8,in=relteae,cond=%str(1=1));
+%summary(ord=9,in=relteae,cond=%str(atoxgrn>=3));
+%summary(ord=10,in=relteae,cond=%str(aeser="是"));
+%summary(ord=11,in=relteae,cond=%str(aeout="致死" or aesdth='是'));
+%summary(ord=12,in=relteae,cond=%str(aeacn='永久停药'));
+%summary(ord=13,in=relteae,cond=%str(aeacn='暂停用药'));
+%summary(ord=14,in=relteae,cond=%str(aedis='是'));
+
+data all1;
+	set f1-f14;
+run;
+
+proc sort data=all1;
+	by grp trt01an;
+run;
+
+proc sort data=dummy;
+	by grp trt01an;
+run;
+
+data fin1;
+	merge all1 dummy(in=b);
+	by grp trt01an;
+	if b;
+run;
+
+proc transpose data=fin1 out=fin2;
+  by grp txt1;
+	var count;
+	id trt01an;
+run;
+
+%macro a;
+data fin3;	
+  length col1-col8 $200;
+	array col(8) col1-col8;
+	array trt(8) _1 _2 _3 _4 _5 _6 _99  _999;
+  set fin2;
+  %do i=1 %to 8;
+	if trt(&i.)=. then  trt(&i.)=0;
+	col&i.=strip(put(trt(&i.),best.))||' '||strip(put(100*trt(&i.)/&&N&i..,perct.));
+	%end;
+  keep txt1 col: grp;
+run; 
+%mend a;
+%a;
+
+data final;
+  set fin3;
+	if grp<=7 then ord=1;
+	else ord=2;
+	pg=1;
+run;
+
+
+ 
+%*-------------------------------------------------------------------------------*;
+%* 表14.3.1.2 按照MedDRA系统器官分类、首选术语总结的TEAE(SS);
+%*-------------------------------------------------------------------------------*;
+ 
+%macro d_soc_pt(lib=,dtin=,filter=,group=,rate=,totlabel=/*内容请与title保持一致*/,
+								bign=,coln=,rown=,code1=aesoc,code2=aedecod,trtgrp=,congrp=,txtlabel=,collabel=,flag=Y, contfl=Y);
+
+%let nodata=无相关数据;  
+%let mgroup_=%qscan(&group,1,|);
+
+	proc sql noprint;
+	    select strip(type) into :type separated by ' '
+	            from sashelp.vcolumn
+	            where libname=upcase("&lib.") and memname=upcase("&dtin.") and upcase(name)=upcase("&mgroup_.");
+	    %put &type.;
+	quit;  
+
+***根据&group和&col信息，按照顺序设置数值型组别; 
+data t0;
+  set &lib..&dtin.;
+  if &filter.;
+    %let _ms=1;
+
+  %if &type.=char %then %do;
+      %do %while (%qscan(%qscan(&group,2,|),&_ms.,\)^=%str());
+        %let group&_ms=%qscan(%qscan(&group,2,|),&_ms.,\);
+        if &mgroup_.="&&group&_ms" then do;%put &&group&_ms;
+            grp=&_ms;output;end;
+        %let _ms=%eval(&_ms+1);
+      %end;
+    if &_ms=&coln then do; grp=&coln.;output; end;
+  %end;
+
+  %if &type.=num %then %do;
+      %do %while (%qscan(%qscan(&group,2,|),&_ms.,\)^=%str());
+        %let group&_ms=%qscan(%qscan(&group,2,|),&_ms.,\);
+        if &mgroup_.=&&group&_ms then do;%put &&group&_ms;
+            grp=&_ms;output;end;
+        %let _ms=%eval(&_ms+1);
+      %end;
+    if &_ms=&coln then do; grp=&coln.;output; end;
+  %end;
+  run;
+
+***uncoded***;
+data t1;
+	  set t0;
+	  if missing(&code1.) then &code1.="未编码"; 
+	  if missing(&code2.) then &code2.="未编码"; 
+run;
+
+proc sql noprint;
+	select distinct("&"||name) into: bigns separated by " " from sashelp.vmacro where index(name,upcase("&bign"));
+quit;
+
+%put &bigns; 
+
+%if %length(&rate) %then %do;***如果发生率填写数字,获取任何一组发生率符合条件的PT;
+proc sql;
+	create table pt_rate as 
+    select distinct count(distinct usubjid) as num,2 as seq,grp,&code2 as txt1 length=200,&code2,&code1 from t1 group by grp,&code1.,&code2.
+	order by seq, txt1, &code1, &code2, grp;
+quit;
+
+proc transpose data=pt_rate out=rate1 prefix=_col;
+	by seq txt1 &code1 &code2;
+	var num;
+	id grp;
+run;
+	
+data rate2;
+	set rate1;
+		%do i=1 %to &coln.;
+		    %let tot&i.=%scan(&bigns,&i.," ");
+		    if missing(_col&i.) then _col&i.=0;
+		    if missing(_col&i.) or &&tot&i.=0 then perct&i.=0;
+		    	else perct&i.=100*_col&i./&&tot&i;
+			if cmiss(perct&i.)=0 and perct&i.>=&rate. then rr&i.=1;
+				else rr&i.=0;
+		%end;
+	tot=sum(of rr1-rr&coln.);
+	if tot>=1;
+	proc sort; 
+		by &code1 &code2;
+run;
+
+proc sort data=t1;
+	by &code1 &code2;
+run;
+
+data t1;
+	merge t1(in=a) rate2(keep=&code1 &code2 in=b);
+	by &code1 &code2;
+	if a and b;
+run;
+
+%end;
+
+***count;
+proc sql noprint;
+    create table t2sum as 
+    (select 0 as seq,"&totlabel" as txt1 length=1000,count(distinct usubjid) as num,grp from t1 group by grp)
+	outer union corr
+    (select distinct count(distinct usubjid) as num,1 as seq,grp,&code1 as txt1 length=1000,&code1 from t1 group by grp,&code1.)
+	outer union corr
+    (select distinct count(distinct usubjid) as num,2 as seq,grp,&code2 as txt1 length=1000,&code2,&code1 from t1 group by grp,&code1.,&code2.)
+	order by seq, txt1, &code1, &code2, grp;
+quit; 
+
+***分组转置;
+proc transpose data=t2sum out=t2sum_1 prefix=_col;
+	by seq txt1 &code1 &code2;
+	var num;
+	id grp;
+run;
+
+***num of obs***;
+ proc sql noprint;
+    select count(*) into: num from t1;
+ quit;
+
+%if &num.^=0 %then %do;
+
+   data freq2;
+    length col1-col&coln. $200;
+    set t2sum_1;
+    %do i=1 %to &coln.;
+	    %let tot&i.=%scan(&bigns,&i.," ");
+	    if missing(_col&i.) then _col&i.=0;
+	    if  _col&i.=0 and &&tot&i.=0 then col&i.='0';**update**;
+	    else col&i.=strip(put(_col&i.,best.))||' '||strip(put(100*_col&i./&&tot&i.,perct.));
+    %end;
+  run;
+
+***soc/ptnum for seq 如果按照某特殊组别排序则在t1后面加筛选条件，否则置空trtgrp,congrp***;
+/*  不良事件的统计表格将以不良事件在试验组的发生率从高到低排序，优先考虑SOC的发生率，在SOC下继续按PT发生率从高往低排序。*/
+/*	若试验组的发生率相同，则依相同原则按对照组的发生率从高往低排序。若发生率仍然相同，则按汉字拼音顺序进行排序。*/
+
+  proc sql;
+    create table freq3 as
+    select freq2.*,temp1.socsum/**试验组socnum***/,temp1_1.socsum1/**对照组socnum***/,temp2.ptsum/**试验组ptnum***/,temp3.ptsum1/**对照组ptnum***/ from freq2
+    left join (select distinct &code1.,count(distinct usubjid) as socsum from t1 %if &trtgrp^=%str() %then (where=(&trtgrp.)); group by &code1.) temp1 
+    on temp1.&code1.=freq2.&code1.
+    left join (select distinct &code1.,count(distinct usubjid) as socsum1 from t1 %if &trtgrp^=%str() %then (where=(&congrp.)); group by &code1.) temp1_1 
+    on temp1_1.&code1.=freq2.&code1.
+
+    left join (select distinct &code1., &code2.,count(distinct usubjid) as ptsum from t1 %if &trtgrp^=%str() %then (where=(&trtgrp.)); group by &code1.,&code2.) temp2 
+    on temp2.&code2.=freq2.&code2. and temp2.&code1.=freq2.&code1.
+    left join (select distinct &code1., &code2.,count(distinct usubjid) as ptsum1 from t1 %if &trtgrp^=%str() %then (where=(&congrp.)); group by &code1.,&code2.) temp3 
+    on temp3.&code2.=freq2.&code2. and temp3.&code1.=freq2.&code1.
+;
+  quit;
+
+  data freq4;length col1-col&coln. $200;
+    set freq3;
+    if txt1="&totlabel" then do;
+    socsum=9999; ptsum=9999; end;
+  run;
+
+***seq***;
+  proc sort data=freq4 out=final sortseq=linguistic(locale=zh_CN collation=PINYIN); 
+		by descending socsum descending socsum1 &code1. seq descending ptsum descending ptsum1 &code2.;run;
+******;
+  data final;
+    set final;
+    pg=ceil(_N_/&rown.);
+    if seq=2 then txt1="  "||txt1;
+		%do mm=1 %to &coln;
+			%let scollabel=%scan(&collabel.,&mm.,#);
+			label col&mm="&scollabel.";
+	    %end;
+  run;
+
+  
+********************************************************************************************
+获取soc到下一页首行, 若soc/pt没有跨页则不输出，跨页不保留 例数（百分比），只保留soc（续）
+********************************************************************************************;
+proc sql noprint;
+	create table soc1 as 
+	select *,min(pg) as min_pg_soc from final group by  &code1.;
+quit;
+
+data soc2;
+	set soc1;
+	_soc1=strip(&code1.)||cats(pg);
+	if seq=2 and pg^=min_pg_soc then _soc2=strip(&code1.)||"（续）";
+run;
+
+proc sort data=soc2 out=final2 sortseq=linguistic(locale=zh_CN collation=PINYIN); 
+	by pg descending socsum descending socsum1 &code1. seq descending ptsum descending ptsum1 &code2.;
+run;
+%end;
+
+%if &num.=0 %then %do;
+  data final;
+    length txt1 $1000 seq &code1. col1-col&coln. $200;
+    pg=1;
+    call symput("totpages","1");
+    call missing (of seq txt1 &code1. col1-col&coln. );
+  run; 
+
+    data final2;
+		set final;
+	run;
+%end;
+
+%mend;
+
+ proc sql noprint;
+	select count(distinct usubjid) into : saf1 trimmed from adam.adsl where saffl='是' and trt01an=1;
+    select count(distinct usubjid) into : saf2 trimmed from adam.adsl where saffl='是' and trt01an=2;
+	select count(distinct usubjid) into : saf3 trimmed from adam.adsl where saffl='是' and trt01an=3;
+    select count(distinct usubjid) into : saf4 trimmed from adam.adsl where saffl='是' and trt01an=4;
+	select count(distinct usubjid) into : saf5 trimmed from adam.adsl where saffl='是' and trt01an=5;
+    select count(distinct usubjid) into : saf6 trimmed from adam.adsl where saffl='是' and trt01an in (1,2,3,4,5);
+	select count(distinct usubjid) into : saf7 trimmed from adam.adsl where saffl='是' and trt01an=99;
+	select count(distinct usubjid) into : saf8 trimmed from adam.adsl where saffl='是' and trt01an^=.;
+
+quit;
+
+data teae;
+  set adam.adae;
+  where saffl="是" and trtemfl="是";
+	output;
+	if trt01an in (1,2,3,4,5) then do; trt01an=6;output;end;
+	if trt01an^=. then do; trt01an=999;output;end;
+run;
+ 
+proc sort data=teae;
+	by trt01an usubjid;
+run;
+ 
+ %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="是" and TRTEMFL = '是' ),group=trt01an|1\2\3\4\5\6\99\999,totlabel=至少发生过一次TEAE,bign=saf,
+    coln=8,rown=10,code1=AEBODSYS,code2=AEDECOD);
+
+ 
+ 
+%*-------------------------------------------------------------------------------*;
+%* 表14.3.1.3 按照MedDRA系统器官分类、首选术语总结的与研究药物相关的TEAE(SS);
+%*-------------------------------------------------------------------------------*;
+ 
+ %d_soc_pt(lib=work,dtin=teae,filter=%str(saffl="是" and TRTEMFL = '是' and relgr1='有关'),group=trt01an|1\2\3\4\5\6\99\999,totlabel=至少发生过一次TEAE,bign=saf,
+    coln=8,rown=10,code1=AEBODSYS,code2=AEDECOD);
